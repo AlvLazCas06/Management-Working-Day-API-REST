@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,7 +27,9 @@ public class Department {
     private BigDecimal budget;
 
     @OneToMany(mappedBy = "department", fetch = FetchType.EAGER)
-    private List<Employee> employees;
+    @ToString.Exclude
+    @Builder.Default
+    private List<Employee> employees = new ArrayList<>();
 
     @Override
     public final boolean equals(Object o) {

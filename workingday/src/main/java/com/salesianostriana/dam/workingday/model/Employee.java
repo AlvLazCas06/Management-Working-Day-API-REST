@@ -1,12 +1,20 @@
 package com.salesianostriana.dam.workingday.model;
 
 import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 public class Employee {
 
@@ -25,7 +33,9 @@ public class Employee {
     private Department department;
 
     @OneToMany(mappedBy = "employee", fetch = FetchType.EAGER)
-    private List<Signing> signings;
+    @ToString.Exclude
+    @Builder.Default
+    private List<Signing> signings = new ArrayList<>();
 
     @Override
     public final boolean equals(Object o) {
