@@ -20,7 +20,8 @@ public class Signing {
     @GeneratedValue
     private Long id;
 
-    private LocalDateTime moment;
+    @Builder.Default
+    private LocalDateTime moment = LocalDateTime.now();
 
     @Enumerated(EnumType.STRING)
     private Type type;
