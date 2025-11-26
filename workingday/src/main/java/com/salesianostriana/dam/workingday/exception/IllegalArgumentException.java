@@ -6,7 +6,7 @@ public class IllegalArgumentException extends RuntimeException {
     }
 
     public IllegalArgumentException() {
-        super("Error al crear la entidad");
+        super("Error al crear/editar la entidad");
     }
 
 }
