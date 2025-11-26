@@ -32,7 +32,7 @@ public class Employee {
     @JoinColumn(name = "department_id")
     private Department department;
 
-    @OneToMany(mappedBy = "employee", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY)
     @ToString.Exclude
     @Builder.Default
     private List<Signing> signings = new ArrayList<>();

@@ -2,11 +2,14 @@ package com.salesianostriana.dam.workingday.service;
 
 import com.salesianostriana.dam.workingday.dto.CreateEmployeeCmd;
 import com.salesianostriana.dam.workingday.dto.CreateSigningCmd;
+import com.salesianostriana.dam.workingday.exception.DepartmentNotFoundException;
+import com.salesianostriana.dam.workingday.exception.EmployeeNotFoundException;
+import com.salesianostriana.dam.workingday.exception.IllegalArgumentException;
+import com.salesianostriana.dam.workingday.exception.SigningNotFoundException;
 import com.salesianostriana.dam.workingday.model.Employee;
 import com.salesianostriana.dam.workingday.model.Signing;
 import com.salesianostriana.dam.workingday.repository.EmployeeRepository;
 import com.salesianostriana.dam.workingday.repository.SigningRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,62 +19,70 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EmployeeService {
 
+    private final DepartmentService departmentService;
     private final EmployeeRepository employeeRepository;
     private final SigningRepository signingRepository;
 
     public Employee save(CreateEmployeeCmd cmd) {
         Employee employee = CreateEmployeeCmd.toEntity(cmd);
+        if (cmd.departmentId() != null) {
+            try {
+                employee.setDepartment(departmentService.findById(cmd.departmentId()));
+            } catch (IllegalArgumentException ex) {
+
+            }
+        }
         return employeeRepository.save(employee);
     }
 
     public List<Employee> findAll() {
         List<Employee> result = employeeRepository.findAll();
         if (result.isEmpty()) {
-            throw new EntityNotFoundException("No existen empleados en la base de datos");
+            throw new EmployeeNotFoundException();
         }
         return result;
     }
 
     public Employee findById(Long id) {
         Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("El empleado con el id: %d, no existe.".formatted(id)));
+                .orElseThrow(() -> new EmployeeNotFoundException(id));
         return employee;
     }
 
-    public Employee edit(Long id, CreateEmployeeCmd cmd) {
+    public Employee edit(Long employeeId, CreateEmployeeCmd cmd, Long departmentId) {
         Employee employee = CreateEmployeeCmd.toEntity(cmd);
-        if (employeeRepository.findById(id).isEmpty()) {
-            throw new EntityNotFoundException("El empleado con el id: %d, no existe.".formatted(id));
+        if (employeeRepository.findById(employeeId).isEmpty()) {
+            throw new EmployeeNotFoundException(employeeId);
         }
-        employee.setId(id);
-        return employee;
+        employee.setDepartment(departmentService.findById(departmentId));
+        employee.setId(employeeId);
+        return employeeRepository.save(employee);
     }
 
     public Signing setSigning(Long id, CreateSigningCmd cmd) {
         Signing signing = CreateSigningCmd.toEntity(cmd);
         Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("El empleado con el id: %d, no existe.".formatted(id)));
+                .orElseThrow(() -> new EmployeeNotFoundException(id));
         if (employee.getSignings().getLast().getType() == signing.getType()) {
             throw new RuntimeException();
         }
         signing.setEmployee(employee);
-        employee.getSignings().add(signingRepository.save(signing));
-        return signing;
+        return signingRepository.save(signing);
     }
 
     public List<Signing> listSigning(Long id) {
         Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("El empleado con el id: %d, no existe.".formatted(id)));
+                .orElseThrow(() -> new EmployeeNotFoundException(id));
         List<Signing> signings = employee.getSignings();
-        if (signings.isEmpty() && signings == null) {
-            throw new EntityNotFoundException("No existen fichaje en este empleado.");
+        if (signings.isEmpty()) {
+            throw new SigningNotFoundException();
         }
         return signings;
     }
 
     public void delete(Long id) {
         Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("El empleado con el id: %d, no existe".formatted(id)));
+                .orElseThrow(() -> new EmployeeNotFoundException(id));
         employee.getSignings().clear();
         employeeRepository.delete(employee);
     }

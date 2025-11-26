@@ -46,7 +46,7 @@ public class EmployeeController {
             @PathVariable Long departmentId,
             @RequestBody CreateEmployeeCmd cmd
     ) {
-        return ResponseEntity.ok(EmployeeResponse.of(employeeService.edit(employeeId, cmd)));
+        return ResponseEntity.ok(EmployeeResponse.of(employeeService.edit(employeeId, cmd, departmentId)));
     }
 
     @PostMapping("/{id:[0-9]+}/signing")
