@@ -45,4 +45,11 @@ public class DepartmentService {
         return department;
     }
 
+    public void delete(Long id) {
+        Department department = departmentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("El departamento con el id: %d, no existe".formatted(id)));
+        department.getEmployees().clear();
+        departmentRepository.delete(department);
+    }
+
 }
