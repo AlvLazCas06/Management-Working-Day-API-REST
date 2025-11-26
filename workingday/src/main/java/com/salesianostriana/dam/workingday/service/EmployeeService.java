@@ -51,9 +51,19 @@ public class EmployeeService {
         if (employee.getSignings().getLast().getType() == signing.getType()) {
             throw new RuntimeException();
         }
-
+        signing.setEmployee(employee);
         employee.getSignings().add(signingRepository.save(signing));
         return signing;
+    }
+
+    public List<Signing> listSigning(Long id) {
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("El empleado con el id: %d, no existe.".formatted(id)));
+        List<Signing> signings = employee.getSignings();
+        if (signings.isEmpty() && signings == null) {
+            throw new EntityNotFoundException("No existen fichaje en este empleado.");
+        }
+        return signings;
     }
 
 }
