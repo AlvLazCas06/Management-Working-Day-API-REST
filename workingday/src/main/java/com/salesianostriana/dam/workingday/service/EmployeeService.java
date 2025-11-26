@@ -2,10 +2,8 @@ package com.salesianostriana.dam.workingday.service;
 
 import com.salesianostriana.dam.workingday.dto.CreateEmployeeCmd;
 import com.salesianostriana.dam.workingday.dto.CreateSigningCmd;
-import com.salesianostriana.dam.workingday.exception.DepartmentNotFoundException;
-import com.salesianostriana.dam.workingday.exception.EmployeeNotFoundException;
+import com.salesianostriana.dam.workingday.exception.*;
 import com.salesianostriana.dam.workingday.exception.IllegalArgumentException;
-import com.salesianostriana.dam.workingday.exception.SigningNotFoundException;
 import com.salesianostriana.dam.workingday.model.Employee;
 import com.salesianostriana.dam.workingday.model.Signing;
 import com.salesianostriana.dam.workingday.repository.EmployeeRepository;
@@ -28,8 +26,8 @@ public class EmployeeService {
         if (cmd.departmentId() != null) {
             try {
                 employee.setDepartment(departmentService.findById(cmd.departmentId()));
-            } catch (IllegalArgumentException ex) {
-
+            } catch (DepartmentNotFoundException ex) {
+                throw new IllegalArgumentException();
             }
         }
         return employeeRepository.save(employee);
@@ -54,7 +52,11 @@ public class EmployeeService {
         if (employeeRepository.findById(employeeId).isEmpty()) {
             throw new EmployeeNotFoundException(employeeId);
         }
-        employee.setDepartment(departmentService.findById(departmentId));
+        try {
+            employee.setDepartment(departmentService.findById(departmentId));
+        } catch (DepartmentNotFoundException ex) {
+            throw new IllegalArgumentException();
+        }
         employee.setId(employeeId);
         return employeeRepository.save(employee);
     }
@@ -63,8 +65,9 @@ public class EmployeeService {
         Signing signing = CreateSigningCmd.toEntity(cmd);
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException(id));
-        if (employee.getSignings().getLast().getType() == signing.getType()) {
-            throw new RuntimeException();
+        if (!employee.getSignings().isEmpty()
+                && employee.getSignings().getLast().getType() == signing.getType()) {
+            throw new SigningDuplicateException();
         }
         signing.setEmployee(employee);
         return signingRepository.save(signing);
@@ -83,7 +86,10 @@ public class EmployeeService {
     public void delete(Long id) {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException(id));
-        employee.getSignings().clear();
+        if (!employee.getSignings().isEmpty()) {
+            employee.getSignings()
+                    .forEach(signingRepository::delete);
+        }
         employeeRepository.delete(employee);
     }
 

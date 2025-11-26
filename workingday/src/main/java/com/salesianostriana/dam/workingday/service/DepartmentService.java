@@ -3,10 +3,12 @@ package com.salesianostriana.dam.workingday.service;
 import com.salesianostriana.dam.workingday.dto.CreateDepartmentCmd;
 import com.salesianostriana.dam.workingday.exception.BudgetExceededException;
 import com.salesianostriana.dam.workingday.exception.DepartmentNotFoundException;
+import com.salesianostriana.dam.workingday.exception.IllegalArgumentException;
 import com.salesianostriana.dam.workingday.model.Department;
 import com.salesianostriana.dam.workingday.repository.DepartmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -18,6 +20,9 @@ public class DepartmentService {
 
     public Department save(CreateDepartmentCmd cmd) {
         Department department = CreateDepartmentCmd.toEntity(cmd);
+        if (!StringUtils.hasText(cmd.name()) || cmd.budget() == null) {
+            throw new IllegalArgumentException();
+        }
         return departmentRepository.save(department);
     }
 
@@ -56,7 +61,13 @@ public class DepartmentService {
     public void delete(Long id) {
         Department department = departmentRepository.findById(id)
                 .orElseThrow(() -> new DepartmentNotFoundException(id));
-        department.getEmployees().clear();
+        if (!department.getEmployees().isEmpty()) {
+            department.removeEmployee(
+                    department.getEmployees()
+                            .iterator()
+                            .next()
+            );
+        }
         departmentRepository.delete(department);
     }
 
