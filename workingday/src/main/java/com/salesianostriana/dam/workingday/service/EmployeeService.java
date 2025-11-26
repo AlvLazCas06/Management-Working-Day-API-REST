@@ -10,6 +10,7 @@ import com.salesianostriana.dam.workingday.repository.EmployeeRepository;
 import com.salesianostriana.dam.workingday.repository.SigningRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -23,6 +24,9 @@ public class EmployeeService {
 
     public Employee save(CreateEmployeeCmd cmd) {
         Employee employee = CreateEmployeeCmd.toEntity(cmd);
+        if (!StringUtils.hasText(cmd.fullName()) || !StringUtils.hasText(cmd.position()) || cmd.salary() == null) {
+            throw new IllegalArgumentException();
+        }
         if (cmd.departmentId() != null) {
             try {
                 employee.setDepartment(departmentService.findById(cmd.departmentId()));
