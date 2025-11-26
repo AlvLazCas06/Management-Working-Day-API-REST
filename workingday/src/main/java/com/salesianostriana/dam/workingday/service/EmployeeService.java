@@ -21,11 +21,14 @@ public class EmployeeService {
 
     public Employee save(CreateEmployeeCmd cmd) {
         Employee employee = CreateEmployeeCmd.toEntity(cmd);
-        return employee;
+        return employeeRepository.save(employee);
     }
 
     public List<Employee> findAll() {
         List<Employee> result = employeeRepository.findAll();
+        if (result.isEmpty()) {
+            throw new EntityNotFoundException("No existen empleados en la base de datos");
+        }
         return result;
     }
 
@@ -64,6 +67,13 @@ public class EmployeeService {
             throw new EntityNotFoundException("No existen fichaje en este empleado.");
         }
         return signings;
+    }
+
+    public void delete(Long id) {
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("El empleado con el id: %d, no existe".formatted(id)));
+        employee.getSignings().clear();
+        employeeRepository.delete(employee);
     }
 
 }
