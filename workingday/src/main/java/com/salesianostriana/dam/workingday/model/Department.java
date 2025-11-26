@@ -26,7 +26,7 @@ public class Department {
 
     private BigDecimal budget;
 
-    @OneToMany(mappedBy = "department", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
     @ToString.Exclude
     @Builder.Default
     private List<Employee> employees = new ArrayList<>();
@@ -45,6 +45,11 @@ public class Department {
     @Override
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+    }
+
+    public void removeEmployee(Employee employee) {
+        employees.remove(employee);
+        employee.setDepartment(null);
     }
 
 }

@@ -1,12 +1,14 @@
 package com.salesianostriana.dam.workingday.service;
 
 import com.salesianostriana.dam.workingday.dto.CreateDepartmentCmd;
+import com.salesianostriana.dam.workingday.exception.BudgetExceededException;
+import com.salesianostriana.dam.workingday.exception.DepartmentNotFoundException;
+import com.salesianostriana.dam.workingday.exception.IllegalArgumentException;
 import com.salesianostriana.dam.workingday.model.Department;
-import com.salesianostriana.dam.workingday.model.Employee;
 import com.salesianostriana.dam.workingday.repository.DepartmentRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -18,37 +20,54 @@ public class DepartmentService {
 
     public Department save(CreateDepartmentCmd cmd) {
         Department department = CreateDepartmentCmd.toEntity(cmd);
+        if (!StringUtils.hasText(cmd.name()) || cmd.budget() == null) {
+            throw new IllegalArgumentException();
+        }
         return departmentRepository.save(department);
     }
 
     public List<Department> findAll() {
         List<Department> result = departmentRepository.findAll();
+        if (result.isEmpty()) {
+            throw new DepartmentNotFoundException();
+        }
         return result;
     }
 
     public Department findById(Long id) {
         Department department = departmentRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("El departamento con el id: %d, no existe".formatted(id)));
+                .orElseThrow(() -> new DepartmentNotFoundException(id));
         return department;
     }
 
     public Department edit(Long id, CreateDepartmentCmd cmd) {
         Department department = CreateDepartmentCmd.toEntity(cmd);
-        double total = 0;
+        double total;
         if (departmentRepository.findById(id).isEmpty()) {
-            throw new EntityNotFoundException("El departamento con el id: %d, no existe".formatted(id));
+            throw new DepartmentNotFoundException(id);
         }
-//        if (!department.getEmployees().isEmpty() && department.getEmployees() != null) {
-//
-//        }
+        if (!department.getEmployees().isEmpty()) {
+            total = department.getEmployees().stream()
+                    .mapToDouble(employee -> employee.getSalary().doubleValue())
+                    .sum();
+            if (total > department.getBudget().doubleValue()) {
+                throw new BudgetExceededException();
+            }
+        }
         department.setId(id);
         return department;
     }
 
     public void delete(Long id) {
         Department department = departmentRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("El departamento con el id: %d, no existe".formatted(id)));
-        department.getEmployees().clear();
+                .orElseThrow(() -> new DepartmentNotFoundException(id));
+        if (!department.getEmployees().isEmpty()) {
+            department.removeEmployee(
+                    department.getEmployees()
+                            .iterator()
+                            .next()
+            );
+        }
         departmentRepository.delete(department);
     }
 

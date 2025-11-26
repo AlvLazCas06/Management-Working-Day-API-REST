@@ -3,6 +3,7 @@ package com.salesianostriana.dam.workingday.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -21,6 +22,7 @@ public class Signing {
     private Long id;
 
     @Builder.Default
+    @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime moment = LocalDateTime.now();
 
     @Enumerated(EnumType.STRING)
