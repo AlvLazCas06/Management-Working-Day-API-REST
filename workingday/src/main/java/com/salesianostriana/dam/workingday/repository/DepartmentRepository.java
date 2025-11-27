@@ -8,4 +8,6 @@ public interface DepartmentRepository
 
     boolean existsDepartmentByName(String name);
 
+    boolean existsDepartmentByNameAndIdNot(String name, Long id);
+
 }

@@ -50,7 +50,7 @@ public class DepartmentService {
         }
         if (!StringUtils.hasText(department.getName())
                 || department.getBudget() == null
-                || departmentRepository.existsDepartmentByName(department.getName())) {
+                || departmentRepository.existsDepartmentByNameAndIdNot(department.getName(), id)) {
             throw new IllegalArgumentException();
         }
         if (!department.getEmployees().isEmpty()) {
