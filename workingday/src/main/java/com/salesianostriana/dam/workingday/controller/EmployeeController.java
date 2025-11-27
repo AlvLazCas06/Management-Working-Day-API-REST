@@ -286,18 +286,18 @@ public class EmployeeController {
                     )
             ),
             @ApiResponse(
-                    responseCode = "409",
-                    description = "No se puede introducir el mismo fichaje de forma seguida",
+                    responseCode = "400",
+                    description = "Error al introducir los datos del fichaje",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = SigningDuplicateException.class),
+                            schema = @Schema(implementation = IllegalArgumentException.class),
                             examples = @ExampleObject("""
                                     {
-                                        "type": "https://dam.salesianos-triana.com/duplicate-signing",
-                                        "title": "Fichaje duplicado",
-                                        "status": 409,
-                                        "detail": "No puedes fichar del mismo tipo dos veces",
-                                        "instance": "/api/v1/employee/1/signing"
+                                        "type": "https://dam.salesianos-triana.com/data-error",
+                                        "title": "Error de datos",
+                                        "status": 400,
+                                        "detail": "Error al crear/editar la entidad",
+                                        "instance": "/api/v1/employee"
                                     }
                                     """)
                     )
@@ -315,6 +315,23 @@ public class EmployeeController {
                                         "status": 404,
                                         "detail": "El empleado con el id: 2, no existe.",
                                         "instance": "/api/v1/employee/2/signing"
+                                    }
+                                    """)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "No se puede introducir el mismo fichaje de forma seguida",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = SigningDuplicateException.class),
+                            examples = @ExampleObject("""
+                                    {
+                                        "type": "https://dam.salesianos-triana.com/duplicate-signing",
+                                        "title": "Fichaje duplicado",
+                                        "status": 409,
+                                        "detail": "No puedes fichar del mismo tipo dos veces",
+                                        "instance": "/api/v1/employee/1/signing"
                                     }
                                     """)
                     )

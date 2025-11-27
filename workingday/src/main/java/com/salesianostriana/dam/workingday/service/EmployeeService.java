@@ -89,7 +89,12 @@ public class EmployeeService {
     }
 
     public Signing setSigning(Long id, CreateSigningCmd cmd) {
-        Signing signing = CreateSigningCmd.toEntity(cmd);
+        Signing signing;
+        try {
+            signing = CreateSigningCmd.toEntity(cmd);
+        } catch (java.lang.IllegalArgumentException ex) {
+            throw new IllegalArgumentException();
+        }
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException(id));
         if (!employee.getSignings().isEmpty()
