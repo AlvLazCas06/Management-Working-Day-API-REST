@@ -27,7 +27,7 @@ public class Department {
 
     private BigDecimal budget;
 
-    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "department", fetch = FetchType.EAGER)
     @ToString.Exclude
     @Builder.Default
     private List<Employee> employees = new ArrayList<>();

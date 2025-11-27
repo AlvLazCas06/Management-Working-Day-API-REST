@@ -9,7 +9,7 @@ public record CreateSigningCmd(
 
     public static Signing toEntity(CreateSigningCmd cmd) {
         return Signing.builder()
-                .type(Type.valueOf(cmd.type))
+                .type(Type.valueOf(cmd.type.toUpperCase()))
                 .build();
     }
 
