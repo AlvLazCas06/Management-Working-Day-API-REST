@@ -7,11 +7,13 @@ import com.salesianostriana.dam.workingday.exception.IllegalArgumentException;
 import com.salesianostriana.dam.workingday.model.Department;
 import com.salesianostriana.dam.workingday.repository.DepartmentRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DepartmentService {
@@ -48,6 +50,7 @@ public class DepartmentService {
         if (departmentRepository.findById(id).isEmpty()) {
             throw new DepartmentNotFoundException(id);
         }
+        department.setEmployees(findById(id).getEmployees());
         if (!StringUtils.hasText(department.getName())
                 || department.getBudget() == null
                 || departmentRepository.existsDepartmentByNameAndIdNot(department.getName(), id)) {
@@ -57,7 +60,7 @@ public class DepartmentService {
             total = department.getEmployees().stream()
                     .mapToDouble(employee -> employee.getSalary().doubleValue())
                     .sum();
-            if (total > department.getBudget().doubleValue()) {
+            if (department.getBudget().doubleValue() < total) {
                 throw new BudgetExceededException();
             }
         }

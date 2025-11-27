@@ -4,6 +4,7 @@ import com.salesianostriana.dam.workingday.dto.CreateEmployeeCmd;
 import com.salesianostriana.dam.workingday.dto.CreateSigningCmd;
 import com.salesianostriana.dam.workingday.exception.*;
 import com.salesianostriana.dam.workingday.exception.IllegalArgumentException;
+import com.salesianostriana.dam.workingday.model.Department;
 import com.salesianostriana.dam.workingday.model.Employee;
 import com.salesianostriana.dam.workingday.model.Signing;
 import com.salesianostriana.dam.workingday.repository.EmployeeRepository;
@@ -24,12 +25,22 @@ public class EmployeeService {
 
     public Employee save(CreateEmployeeCmd cmd) {
         Employee employee = CreateEmployeeCmd.toEntity(cmd);
+        Department department;
+        double total;
         if (!StringUtils.hasText(cmd.fullName()) || !StringUtils.hasText(cmd.position()) || cmd.salary() == null) {
             throw new IllegalArgumentException();
         }
         if (cmd.departmentId() != null) {
             try {
-                employee.setDepartment(departmentService.findById(cmd.departmentId()));
+                department = departmentService.findById(cmd.departmentId());
+                department.getEmployees().add(employee);
+                employee.setDepartment(department);
+                total = department.getEmployees().stream()
+                        .mapToDouble(e -> e.getSalary().doubleValue())
+                        .sum();
+                if (department.getBudget().doubleValue() < total) {
+                    throw new BudgetExceededException();
+                }
             } catch (DepartmentNotFoundException ex) {
                 throw new IllegalArgumentException();
             }
@@ -53,20 +64,37 @@ public class EmployeeService {
 
     public Employee edit(Long employeeId, CreateEmployeeCmd cmd, Long departmentId) {
         Employee employee = CreateEmployeeCmd.toEntity(cmd);
+        Department department;
+        double total;
+        employee.setId(employeeId);
         if (employeeRepository.findById(employeeId).isEmpty()) {
             throw new EmployeeNotFoundException(employeeId);
         }
         try {
-            employee.setDepartment(departmentService.findById(departmentId));
+            department = departmentService.findById(departmentId);
+            if (!department.getEmployees().contains(employee)) {
+                department.getEmployees().add(employee);
+            }
+            employee.setDepartment(department);
+            total = department.getEmployees().stream()
+                    .mapToDouble(e -> e.getSalary().doubleValue())
+                    .sum();
+            if (department.getBudget().doubleValue() < total) {
+                throw new BudgetExceededException();
+            }
         } catch (DepartmentNotFoundException ex) {
             throw new IllegalArgumentException();
         }
-        employee.setId(employeeId);
         return employeeRepository.save(employee);
     }
 
     public Signing setSigning(Long id, CreateSigningCmd cmd) {
-        Signing signing = CreateSigningCmd.toEntity(cmd);
+        Signing signing;
+        try {
+            signing = CreateSigningCmd.toEntity(cmd);
+        } catch (java.lang.IllegalArgumentException ex) {
+            throw new IllegalArgumentException();
+        }
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException(id));
         if (!employee.getSignings().isEmpty()
