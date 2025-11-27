@@ -22,6 +22,7 @@ public class Department {
     @GeneratedValue
     private Long id;
 
+    @Column(unique = true)
     private String name;
 
     private BigDecimal budget;

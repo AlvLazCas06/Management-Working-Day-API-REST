@@ -20,7 +20,9 @@ public class DepartmentService {
 
     public Department save(CreateDepartmentCmd cmd) {
         Department department = CreateDepartmentCmd.toEntity(cmd);
-        if (!StringUtils.hasText(cmd.name()) || cmd.budget() == null) {
+        if (!StringUtils.hasText(department.getName())
+                || department.getBudget() == null
+                || departmentRepository.existsDepartmentByName(department.getName())) {
             throw new IllegalArgumentException();
         }
         return departmentRepository.save(department);
@@ -45,6 +47,11 @@ public class DepartmentService {
         double total;
         if (departmentRepository.findById(id).isEmpty()) {
             throw new DepartmentNotFoundException(id);
+        }
+        if (!StringUtils.hasText(department.getName())
+                || department.getBudget() == null
+                || departmentRepository.existsDepartmentByName(department.getName())) {
+            throw new IllegalArgumentException();
         }
         if (!department.getEmployees().isEmpty()) {
             total = department.getEmployees().stream()
