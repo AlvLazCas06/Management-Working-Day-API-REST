@@ -1,6 +1,7 @@
 package com.salesianostriana.dam.workingday.controller;
 
 import com.salesianostriana.dam.workingday.dto.CreateEmployeeCmd;
+import com.salesianostriana.dam.workingday.dto.EditEmployeeCmd;
 import com.salesianostriana.dam.workingday.dto.EmployeeResponse;
 import com.salesianostriana.dam.workingday.dto.SigningResponse;
 import com.salesianostriana.dam.workingday.exception.IllegalArgumentException;
@@ -252,7 +253,7 @@ public class EmployeeController {
                     description = "Cuerpo de datos a introducir en el JSON",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = CreateEmployeeCmd.class),
+                            schema = @Schema(implementation = EditEmployeeCmd.class),
                             examples = @ExampleObject("""
                                     {
                                         "fullName": "Pepito Juarez Gutierrez",
@@ -263,7 +264,7 @@ public class EmployeeController {
                     ),
                     required = true
             )
-            @RequestBody CreateEmployeeCmd cmd
+            @RequestBody EditEmployeeCmd cmd
     ) {
         return ResponseEntity.ok(EmployeeResponse.of(employeeService.edit(employeeId, cmd, departmentId)));
     }

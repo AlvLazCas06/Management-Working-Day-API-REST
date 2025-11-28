@@ -1,6 +1,7 @@
 package com.salesianostriana.dam.workingday.service;
 
 import com.salesianostriana.dam.workingday.dto.CreateEmployeeCmd;
+import com.salesianostriana.dam.workingday.dto.EditEmployeeCmd;
 import com.salesianostriana.dam.workingday.exception.*;
 import com.salesianostriana.dam.workingday.exception.IllegalArgumentException;
 import com.salesianostriana.dam.workingday.model.Department;
@@ -66,8 +67,8 @@ public class EmployeeService {
         return employee;
     }
 
-    public Employee edit(Long employeeId, CreateEmployeeCmd cmd, Long departmentId) {
-        Employee employee = CreateEmployeeCmd.toEntity(cmd);
+    public Employee edit(Long employeeId, EditEmployeeCmd cmd, Long departmentId) {
+        Employee employee = EditEmployeeCmd.toEntity(cmd);
         Department department;
         double total;
         employee.setId(employeeId);
