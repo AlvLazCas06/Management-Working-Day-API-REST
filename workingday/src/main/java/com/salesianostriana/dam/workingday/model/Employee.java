@@ -37,11 +37,6 @@ public class Employee {
     @Builder.Default
     private List<Signing> signings = new ArrayList<>();
 
-    public void removeSigning(Signing signing) {
-        signings.remove(signing);
-        signing.setEmployee(null);
-    }
-
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;

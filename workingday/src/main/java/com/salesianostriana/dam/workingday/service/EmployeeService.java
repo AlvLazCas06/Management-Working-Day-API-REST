@@ -1,12 +1,12 @@
 package com.salesianostriana.dam.workingday.service;
 
 import com.salesianostriana.dam.workingday.dto.CreateEmployeeCmd;
-import com.salesianostriana.dam.workingday.dto.CreateSigningCmd;
 import com.salesianostriana.dam.workingday.exception.*;
 import com.salesianostriana.dam.workingday.exception.IllegalArgumentException;
 import com.salesianostriana.dam.workingday.model.Department;
 import com.salesianostriana.dam.workingday.model.Employee;
 import com.salesianostriana.dam.workingday.model.Signing;
+import com.salesianostriana.dam.workingday.model.Type;
 import com.salesianostriana.dam.workingday.repository.EmployeeRepository;
 import com.salesianostriana.dam.workingday.repository.SigningRepository;
 import lombok.RequiredArgsConstructor;
@@ -88,15 +88,19 @@ public class EmployeeService {
         return employeeRepository.save(employee);
     }
 
-    public Signing setSigning(Long id, CreateSigningCmd cmd) {
+    public Signing setSigning(Long id) {
         Signing signing;
-        try {
-            signing = CreateSigningCmd.toEntity(cmd);
-        } catch (java.lang.IllegalArgumentException ex) {
-            throw new IllegalArgumentException();
-        }
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException(id));
+        if (!employee.getSignings().isEmpty()
+                && employee.getSignings().getLast().getType() == Type.ENTRY) {
+            signing = Signing.builder().type(Type.EXIT).build();
+        } else if (!employee.getSignings().isEmpty()
+                && employee.getSignings().getLast().getType() == Type.EXIT) {
+            signing = Signing.builder().type(Type.ENTRY).build();
+        } else {
+            signing = Signing.builder().type(Type.ENTRY).build();
+        }
         if (!employee.getSignings().isEmpty()
                 && employee.getSignings().getLast().getType() == signing.getType()) {
             throw new SigningDuplicateException();

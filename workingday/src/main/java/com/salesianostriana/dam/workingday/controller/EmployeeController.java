@@ -1,7 +1,6 @@
 package com.salesianostriana.dam.workingday.controller;
 
 import com.salesianostriana.dam.workingday.dto.CreateEmployeeCmd;
-import com.salesianostriana.dam.workingday.dto.CreateSigningCmd;
 import com.salesianostriana.dam.workingday.dto.EmployeeResponse;
 import com.salesianostriana.dam.workingday.dto.SigningResponse;
 import com.salesianostriana.dam.workingday.exception.IllegalArgumentException;
@@ -125,16 +124,14 @@ public class EmployeeController {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = CreateEmployeeCmd.class),
-                            examples = {
-                                    @ExampleObject("""
+                            examples = @ExampleObject("""
                                     {
                                       "fullName": "Pepito Juarez Gutierrez",
                                       "position": "junior",
                                       "salary": 2000,
                                       "departmentId": 1
                                     }
-                                    """),
-                            }
+                                    """)
                     ),
                     required = true
             )
@@ -300,6 +297,7 @@ public class EmployeeController {
                                         "status": 400,
                                         "detail": "Error al crear/editar la entidad",
                                         "instance": "/api/v1/employee"
+                                        "type": "ENTRY"
                                     }
                                     """)
                     )
@@ -342,24 +340,10 @@ public class EmployeeController {
     @PostMapping("/{id:[0-9]+}/signing")
     public ResponseEntity<SigningResponse> createSigning(
             @Parameter(description = "ID del empleado a fichar", required = true)
-            @PathVariable Long id,
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Cuerpo de datos a introducir en el JSON",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = CreateEmployeeCmd.class),
-                            examples = @ExampleObject("""
-                                    {
-                                        "type": "EXIT"
-                                    }
-                                    """)
-                    ),
-                    required = true
-            )
-            @RequestBody CreateSigningCmd cmd
+            @PathVariable Long id
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(SigningResponse.of(employeeService.setSigning(id, cmd)));
+                .body(SigningResponse.of(employeeService.setSigning(id)));
     }
 
     @Operation(summary = "Obtener todos los fichajes de un empleado de la base de datos")
@@ -377,7 +361,7 @@ public class EmployeeController {
                                             "type": "EXIT"
                                         },
                                         {
-                                            "moment": "2025-12-27T00:11:22.002563",
+                                            "moment": "2025-11-27T00:11:22.002563",
                                             "type": "ENTRY"
                                         }
                                     ]
@@ -391,6 +375,14 @@ public class EmployeeController {
                             mediaType = "application/json",
                             schema = @Schema(implementation = NotFoundException.class),
                             examples = @ExampleObject("""
+                                    {
+                                        "type": "https://dam.salesianos-triana.com/entity-not-found",
+                                        "title": "Entidad no encontrada",
+                                        "status": 404,
+                                        "detail": "El empleado con el id: 2, no existe.",
+                                        "instance": "/api/v1/employee/2/signing"
+                                    }
+                                    // En caso de que el empleado no tenga fichajes
                                     {
                                         "type": "https://dam.salesianos-triana.com/entity-not-found",
                                         "title": "Entidad no encontrada",

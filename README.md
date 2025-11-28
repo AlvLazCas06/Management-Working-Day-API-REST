@@ -22,8 +22,6 @@ Con esta aplicación se pueden realizar las siguientes tareas:<br>
 - Editar un departamento.
 - Eliminar un departamento.
 
-<hr>
-
 Para poder ver el proyecto debe clonar el repositorio con el siguiente comando:
 ```
 git clone https://github.com/AlvLazCas06/Management-Working-Day-API-REST.git
@@ -45,8 +43,6 @@ Lo siguiente será abrir el proyecto en su IDE de uso particular:
 - Abrir editor de código.
 - File -> open folder -> seleccionar la carpeta del proyecto.
 - Revisar que tenemos instaladas las extensiones de Java para VS Code.
-
-<hr>
 
 # Ejecución del proyecto
 
