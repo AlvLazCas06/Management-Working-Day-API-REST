@@ -1,7 +1,6 @@
 package com.salesianostriana.dam.workingday.controller;
 
 import com.salesianostriana.dam.workingday.dto.CreateEmployeeCmd;
-import com.salesianostriana.dam.workingday.dto.CreateSigningCmd;
 import com.salesianostriana.dam.workingday.dto.EmployeeResponse;
 import com.salesianostriana.dam.workingday.dto.SigningResponse;
 import com.salesianostriana.dam.workingday.exception.IllegalArgumentException;
@@ -92,9 +91,9 @@ public class EmployeeController {
                                     {
                                         "id": 1,
                                         "fullName": "Pepito Juarez Gutierrez",
-                                        "position": "junior"
-                                        "salary": 2000,
-                                        "departmentName": "Finanzas"
+                                        "position": "junior",
+                                        "salary": 1000,
+                                        "departmentName": "Aún no está en ningún departamento",
                                         "signings": []
                                     }
                                     """)
@@ -129,8 +128,8 @@ public class EmployeeController {
                                     {
                                         "fullName": "Pepito Juarez Gutierrez",
                                         "position": "junior",
-                                        "salary": 2000,
-                                        "departmentId": 1 //Este último no es obligatorio
+                                        "salary": 1000,
+                                        "departmentId": 1
                                     }
                                     """)
                     ),
@@ -154,9 +153,9 @@ public class EmployeeController {
                                     {
                                         "id": 1,
                                         "fullName": "Pepito Juarez Gutierrez",
-                                        "position": "junior"
-                                        "salary": 2000,
-                                        "departmentName": "Finanzas"
+                                        "position": "junior",
+                                        "salary": 1000,
+                                        "departmentName": "Aún no está en ningún departamento",
                                         "signings": []
                                     }
                                     """)
@@ -199,10 +198,10 @@ public class EmployeeController {
                             examples = @ExampleObject("""
                                     {
                                         "id": 1,
-                                        "fullName": "Pepito Juarez Gutierrez",
-                                        "position": "junior"
-                                        "salary": 2000,
-                                        "departmentName": "Finanzas"
+                                        "fullName": "Álvaro Juarez Gutierrez",
+                                        "position": "junior",
+                                        "salary": 1000,
+                                        "departmentName": "Gestoría",
                                         "signings": []
                                     }
                                     """)
@@ -280,24 +279,7 @@ public class EmployeeController {
                             examples = @ExampleObject("""
                                     {
                                         "moment": "2025-11-27T00:08:20.3851378",
-                                        "type": "EXIT" / "ENTRY"
-                                    }
-                                    """)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Error al introducir los datos del fichaje",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = IllegalArgumentException.class),
-                            examples = @ExampleObject("""
-                                    {
-                                        "type": "https://dam.salesianos-triana.com/data-error",
-                                        "title": "Error de datos",
-                                        "status": 400,
-                                        "detail": "Error al crear/editar la entidad",
-                                        "instance": "/api/v1/employee"
+                                        "type": "ENTRY"
                                     }
                                     """)
                     )
@@ -340,24 +322,10 @@ public class EmployeeController {
     @PostMapping("/{id:[0-9]+}/signing")
     public ResponseEntity<SigningResponse> createSigning(
             @Parameter(description = "ID del empleado a fichar", required = true)
-            @PathVariable Long id,
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Cuerpo de datos a introducir en el JSON",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = CreateEmployeeCmd.class),
-                            examples = @ExampleObject("""
-                                    {
-                                        "type": "ENTRY" / "EXIT", //Introduce una u otra
-                                    }
-                                    """)
-                    ),
-                    required = true
-            )
-            @RequestBody CreateSigningCmd cmd
+            @PathVariable Long id
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(SigningResponse.of(employeeService.setSigning(id, cmd)));
+                .body(SigningResponse.of(employeeService.setSigning(id)));
     }
 
     @Operation(summary = "Obtener todos los fichajes de un empleado de la base de datos")
@@ -389,14 +357,6 @@ public class EmployeeController {
                             mediaType = "application/json",
                             schema = @Schema(implementation = NotFoundException.class),
                             examples = @ExampleObject("""
-                                    {
-                                        "type": "https://dam.salesianos-triana.com/entity-not-found",
-                                        "title": "Entidad no encontrada",
-                                        "status": 404,
-                                        "detail": "El empleado con el id: 2, no existe.",
-                                        "instance": "/api/v1/employee/2/signing"
-                                    }
-                                    // En caso de que el empleado no tenga fichajes
                                     {
                                         "type": "https://dam.salesianos-triana.com/entity-not-found",
                                         "title": "Entidad no encontrada",
@@ -443,7 +403,7 @@ public class EmployeeController {
                                         "title": "Entidad no encontrada",
                                         "status": 404,
                                         "detail": "El empleado con el id: 2, no existe.",
-                                        "instance": "/api/v1/employee/2/signing"
+                                        "instance": "/api/v1/employee/2"
                                     }
                                     """)
                     )
