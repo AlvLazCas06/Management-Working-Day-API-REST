@@ -89,12 +89,12 @@ public class EmployeeController {
                             schema = @Schema(implementation = EmployeeResponse.class),
                             examples = @ExampleObject("""
                                     {
-                                        "id": 1,
-                                        "fullName": "Pepito Juarez Gutierrez",
-                                        "position": "junior",
-                                        "salary": 1000,
-                                        "departmentName": "Aún no está en ningún departamento",
-                                        "signings": []
+                                      "id": 1,
+                                      "fullName": "Pepito Juarez Gutierrez",
+                                      "position": "junior",
+                                      "salary": 1000,
+                                      "departmentName": "Aún no está en ningún departamento",
+                                      "signings": []
                                     }
                                     """)
                     )
@@ -126,10 +126,10 @@ public class EmployeeController {
                             schema = @Schema(implementation = CreateEmployeeCmd.class),
                             examples = @ExampleObject("""
                                     {
-                                        "fullName": "Pepito Juarez Gutierrez",
-                                        "position": "junior",
-                                        "salary": 1000,
-                                        "departmentId": 1
+                                      "fullName": "Pepito Juarez Gutierrez",
+                                      "position": "junior",
+                                      "salary": 2000,
+                                      "departmentId": 1
                                     }
                                     """)
                     ),
@@ -151,12 +151,12 @@ public class EmployeeController {
                             schema = @Schema(implementation = EmployeeResponse.class),
                             examples = @ExampleObject("""
                                     {
-                                        "id": 1,
-                                        "fullName": "Pepito Juarez Gutierrez",
-                                        "position": "junior",
-                                        "salary": 1000,
-                                        "departmentName": "Aún no está en ningún departamento",
-                                        "signings": []
+                                      "id": 1,
+                                      "fullName": "Pepito Juarez Gutierrez",
+                                      "position": "junior",
+                                      "salary": 1000,
+                                      "departmentName": "Finanzas",
+                                      "signings": []
                                     }
                                     """)
                     )
@@ -198,10 +198,10 @@ public class EmployeeController {
                             examples = @ExampleObject("""
                                     {
                                         "id": 1,
-                                        "fullName": "Álvaro Juarez Gutierrez",
+                                        "fullName": "Pepito Juarez Gutierrez",
                                         "position": "junior",
                                         "salary": 1000,
-                                        "departmentName": "Gestoría",
+                                        "departmentName": "Finanzas",
                                         "signings": []
                                     }
                                     """)
@@ -279,6 +279,24 @@ public class EmployeeController {
                             examples = @ExampleObject("""
                                     {
                                         "moment": "2025-11-27T00:08:20.3851378",
+                                        "type": "EXIT"
+                                    }
+                                    """)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Error al introducir los datos del fichaje",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = IllegalArgumentException.class),
+                            examples = @ExampleObject("""
+                                    {
+                                        "type": "https://dam.salesianos-triana.com/data-error",
+                                        "title": "Error de datos",
+                                        "status": 400,
+                                        "detail": "Error al crear/editar la entidad",
+                                        "instance": "/api/v1/employee"
                                         "type": "ENTRY"
                                     }
                                     """)
@@ -361,6 +379,14 @@ public class EmployeeController {
                                         "type": "https://dam.salesianos-triana.com/entity-not-found",
                                         "title": "Entidad no encontrada",
                                         "status": 404,
+                                        "detail": "El empleado con el id: 2, no existe.",
+                                        "instance": "/api/v1/employee/2/signing"
+                                    }
+                                    // En caso de que el empleado no tenga fichajes
+                                    {
+                                        "type": "https://dam.salesianos-triana.com/entity-not-found",
+                                        "title": "Entidad no encontrada",
+                                        "status": 404,
                                         "detail": "No existen fichajes por parte de este empleado",
                                         "instance": "/api/v1/employee/1/signing"
                                     }
@@ -403,7 +429,7 @@ public class EmployeeController {
                                         "title": "Entidad no encontrada",
                                         "status": 404,
                                         "detail": "El empleado con el id: 2, no existe.",
-                                        "instance": "/api/v1/employee/2"
+                                        "instance": "/api/v1/employee/2/signing"
                                     }
                                     """)
                     )
