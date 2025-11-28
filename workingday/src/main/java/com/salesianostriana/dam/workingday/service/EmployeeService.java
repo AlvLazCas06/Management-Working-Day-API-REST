@@ -27,7 +27,11 @@ public class EmployeeService {
         Employee employee = CreateEmployeeCmd.toEntity(cmd);
         Department department;
         double total;
-        if (!StringUtils.hasText(cmd.fullName()) || !StringUtils.hasText(cmd.position()) || cmd.salary() == null) {
+        if (!StringUtils.hasText(employee.getFullName())
+                || !StringUtils.hasText(employee.getPosition())
+                || employee.getSalary() == null
+                || employee.getSalary().equals(0)
+        ) {
             throw new IllegalArgumentException();
         }
         if (cmd.departmentId() != null) {
@@ -84,6 +88,9 @@ public class EmployeeService {
             }
         } catch (DepartmentNotFoundException ex) {
             throw new IllegalArgumentException();
+        }
+        if (!findById(employeeId).getSignings().isEmpty()) {
+            employee.setSignings(findById(employeeId).getSignings());
         }
         return employeeRepository.save(employee);
     }

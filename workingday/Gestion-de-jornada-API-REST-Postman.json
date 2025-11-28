@@ -1,0 +1,448 @@
+{
+	"info": {
+		"_postman_id": "221f6374-9b60-419b-a13a-9d5b0b75bb5b",
+		"name": "Working-Day-API-REST",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "50123265",
+		"_collection_link": "https://alvlazcas06-9317041.postman.co/workspace/%C3%81lvaro-L%C3%A1zaro-Castell%C3%B3n's-Works~66f79cff-2365-4871-843b-bb06678553aa/collection/50123265-221f6374-9b60-419b-a13a-9d5b0b75bb5b?action=share&source=collection_link&creator=50123265"
+	},
+	"item": [
+		{
+			"name": "Empleados",
+			"item": [
+				{
+					"name": "Fichajes",
+					"item": [
+						{
+							"name": "Registrar fichaje",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "// Error si el tipo de fichaje es el mismo que el anterior",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL_EMPLOYEE}}/1/signing",
+									"host": [
+										"{{API_URL_EMPLOYEE}}"
+									],
+									"path": [
+										"1",
+										"signing"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mostrar Fichajes de un empleado",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "/*\r\nError si el empleado buscado no existe\r\nError si la lista de fichajes está vacía\r\n*/",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL_EMPLOYEE}}/1/signing",
+									"host": [
+										"{{API_URL_EMPLOYEE}}"
+									],
+									"path": [
+										"1",
+										"signing"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Registrar Empleado",
+					"item": [
+						{
+							"name": "Registrar empleado correcto",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"fullName\": \"Pepito Juarez Gutierrez\",\r\n    \"position\": \"junior\",\r\n    \"salary\": 1000\r\n    //\"departmentId\": 1 //Si existe el departamento\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL_EMPLOYEE}}",
+									"host": [
+										"{{API_URL_EMPLOYEE}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Registrar empleado Error",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"fullName\": \"\", // No puede estar vacío\r\n    \"position\": \"\", // No puede estar vacío\r\n    \"salary\": 0, // El salario no puede ser 0\r\n    \"departmentId\": 10 // El departamento no existe\r\n}\r\n\r\n/*\r\n{\r\n    \"fullName\": \"Pepito Juarez Gutierrez\",\r\n    \"position\": \"junior\",\r\n    \"salary\": No puede estar vacío\r\n}\r\n*/",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL_EMPLOYEE}}",
+									"host": [
+										"{{API_URL_EMPLOYEE}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Editar Empleado",
+					"item": [
+						{
+							"name": "Editar empleado correcto",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"fullName\": \"Álvaro Juarez Gutierrez\",\r\n    \"position\": \"junior\",\r\n    \"salary\": 1000\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL_EMPLOYEE}}/1/department/1",
+									"host": [
+										"{{API_URL_EMPLOYEE}}"
+									],
+									"path": [
+										"1",
+										"department",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar empleado correcto error",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "//En la url el departamento introducido no existe en la base de datos\r\n{\r\n    \"fullName\": \"\", // No puede estar vacío\r\n    \"position\": \"\", // No puede estar vacío\r\n    \"salary\": 0 // El salario no puede ser 0\r\n}\r\n\r\n/*\r\n{\r\n    \"fullName\": \"\", // No puede estar vacío\r\n    \"position\": \"\", // No puede estar vacío\r\n    \"salary\": 20000 // El salario el salario es mayor al presupuesto del departamento\r\n}\r\n*/",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL_EMPLOYEE}}/1/department/1",
+									"host": [
+										"{{API_URL_EMPLOYEE}}"
+									],
+									"path": [
+										"1",
+										"department",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Obtener empleados",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// La lista de empleados está vacía",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_EMPLOYEE}}",
+							"host": [
+								"{{API_URL_EMPLOYEE}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener empleado",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// Error si el empleado con ese ID no existe",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_EMPLOYEE}}/1",
+							"host": [
+								"{{API_URL_EMPLOYEE}}"
+							],
+							"path": [
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Borrar empleado",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// Error si el usuario con ese ID no existe",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_EMPLOYEE}}/1",
+							"host": [
+								"{{API_URL_EMPLOYEE}}"
+							],
+							"path": [
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Departamentos",
+			"item": [
+				{
+					"name": "Registrar Departamento",
+					"item": [
+						{
+							"name": "Registrar Departamento Correctamente",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Gestoría\",\r\n    \"budget\": 1000\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL_DEPARTMENT}}",
+									"host": [
+										"{{API_URL_DEPARTMENT}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Registrar Departamento Error",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"a\", // No tiene nombre\r\n    \"budget\": 1 // No el presupuesto no puede ser 0\r\n}\r\n/*\r\n{\r\n    \"name\": \"Finanzas\", // Tiene el mismo nombre que otro departamento\r\n    \"budget\": // El presupuesto no puede estar vacío\r\n}\r\n*/",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL_DEPARTMENT}}",
+									"host": [
+										"{{API_URL_DEPARTMENT}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Editar Departamento",
+					"item": [
+						{
+							"name": "Editar departamento correcto",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Finanzas\",\r\n    \"budget\": 1000\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL_DEPARTMENT}}/1",
+									"host": [
+										"{{API_URL_DEPARTMENT}}"
+									],
+									"path": [
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar departamento Error",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Finanzas\", // Ya existe en otra entidad\r\n    \"budget\": 0 // No puede ser 0\r\n}\r\n\r\n/*\r\n{\r\n    \"name\": \"\", // No puede estar vacío\r\n    \"budget\": // No puede estar vacío\r\n}\r\n*/",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_URL_DEPARTMENT}}/1",
+									"host": [
+										"{{API_URL_DEPARTMENT}}"
+									],
+									"path": [
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Borrar departamento",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// Error si el departamento con ese ID no existe",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_DEPARTMENT}}/1",
+							"host": [
+								"{{API_URL_DEPARTMENT}}"
+							],
+							"path": [
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "API_URL_BASE",
+			"value": "http://localhost:8080/api/v1"
+		},
+		{
+			"key": "API_URL_EMPLOYEE",
+			"value": "{{API_URL_BASE}}/employee"
+		},
+		{
+			"key": "API_URL_DEPARTMENT",
+			"value": "{{API_URL_BASE}}/department"
+		}
+	]
+}

@@ -22,6 +22,7 @@ public class DepartmentService {
         Department department = CreateDepartmentCmd.toEntity(cmd);
         if (!StringUtils.hasText(department.getName())
                 || department.getBudget() == null
+                || department.getBudget().equals(0)
                 || departmentRepository.existsDepartmentByName(department.getName())) {
             throw new IllegalArgumentException();
         }
@@ -51,6 +52,7 @@ public class DepartmentService {
         department.setEmployees(findById(id).getEmployees());
         if (!StringUtils.hasText(department.getName())
                 || department.getBudget() == null
+                || department.getBudget().equals(0)
                 || departmentRepository.existsDepartmentByNameAndIdNot(department.getName(), id)) {
             throw new IllegalArgumentException();
         }
