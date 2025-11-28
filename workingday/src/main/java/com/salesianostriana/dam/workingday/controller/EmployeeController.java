@@ -285,24 +285,6 @@ public class EmployeeController {
                     )
             ),
             @ApiResponse(
-                    responseCode = "400",
-                    description = "Error al introducir los datos del fichaje",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = IllegalArgumentException.class),
-                            examples = @ExampleObject("""
-                                    {
-                                        "type": "https://dam.salesianos-triana.com/data-error",
-                                        "title": "Error de datos",
-                                        "status": 400,
-                                        "detail": "Error al crear/editar la entidad",
-                                        "instance": "/api/v1/employee"
-                                        "type": "ENTRY"
-                                    }
-                                    """)
-                    )
-            ),
-            @ApiResponse(
                     responseCode = "404",
                     description = "No se ha encontrado empleado en la base de datos",
                     content = @Content(
@@ -379,14 +361,6 @@ public class EmployeeController {
                                         "type": "https://dam.salesianos-triana.com/entity-not-found",
                                         "title": "Entidad no encontrada",
                                         "status": 404,
-                                        "detail": "El empleado con el id: 2, no existe.",
-                                        "instance": "/api/v1/employee/2/signing"
-                                    }
-                                    // En caso de que el empleado no tenga fichajes
-                                    {
-                                        "type": "https://dam.salesianos-triana.com/entity-not-found",
-                                        "title": "Entidad no encontrada",
-                                        "status": 404,
                                         "detail": "No existen fichajes por parte de este empleado",
                                         "instance": "/api/v1/employee/1/signing"
                                     }
@@ -413,7 +387,7 @@ public class EmployeeController {
                             mediaType = "application/json",
                             schema = @Schema(implementation = EmployeeResponse.class),
                             examples = @ExampleObject("""
-                                    {}
+                                    
                                     """)
                     )
             ),
@@ -429,7 +403,7 @@ public class EmployeeController {
                                         "title": "Entidad no encontrada",
                                         "status": 404,
                                         "detail": "El empleado con el id: 2, no existe.",
-                                        "instance": "/api/v1/employee/2/signing"
+                                        "instance": "/api/v1/employee/2"
                                     }
                                     """)
                     )
