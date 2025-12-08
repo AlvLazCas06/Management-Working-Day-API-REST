@@ -25,6 +25,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/department")
 @RequiredArgsConstructor
+@CrossOrigin(origins = {"http://localhost:4200"})
 @Tag(name = "Departamentos", description = "Controlador de los departamentos")
 public class DepartmentController {
 

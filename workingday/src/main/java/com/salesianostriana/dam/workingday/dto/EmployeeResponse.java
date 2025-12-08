@@ -1,12 +1,10 @@
 package com.salesianostriana.dam.workingday.dto;
 
 import com.salesianostriana.dam.workingday.model.Employee;
-import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-@Slf4j
 public record EmployeeResponse(
         Long id,
         String fullName,

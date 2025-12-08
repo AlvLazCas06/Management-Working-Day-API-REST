@@ -1,7 +1,6 @@
 package com.salesianostriana.dam.workingday.errors;
 
 import com.salesianostriana.dam.workingday.exception.BudgetExceededException;
-import com.salesianostriana.dam.workingday.exception.EmployeeNotFoundException;
 import com.salesianostriana.dam.workingday.exception.IllegalArgumentException;
 import com.salesianostriana.dam.workingday.exception.NotFoundException;
 import com.salesianostriana.dam.workingday.exception.SigningDuplicateException;

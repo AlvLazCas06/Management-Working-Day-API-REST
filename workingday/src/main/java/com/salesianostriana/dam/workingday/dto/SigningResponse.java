@@ -1,6 +1,5 @@
 package com.salesianostriana.dam.workingday.dto;
 
-import com.salesianostriana.dam.workingday.model.Employee;
 import com.salesianostriana.dam.workingday.model.Signing;
 import com.salesianostriana.dam.workingday.model.Type;
 
